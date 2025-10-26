@@ -32,6 +32,7 @@ final class WuzzyAppDelegate: NSObject, NSApplicationDelegate {
         overlayViewModel.screenRecordingGranted = screenRecordingAuthorizer.isAuthorized
         settingsViewModel.refreshAccessibilityState()
         settingsViewModel.updateScreenRecordingStatus(isGranted: screenRecordingAuthorizer.isAuthorized)
+        settingsViewModel.updateDisplayOptions()
 
         windowIndexer.start()
         hotkeyManager.register(hotkey: settingsViewModel.hotkey) { [weak self] in

@@ -10,7 +10,14 @@ struct SettingsView: View {
                 HotkeyRecorderView(hotkey: $viewModel.hotkey)
             }
 
-            Section(header: Text("Overlay Placement")) {
+            Section(header: Text("Appearance")) {
+                Picker("Theme", selection: $viewModel.theme) {
+                    ForEach(OverlayTheme.allCases) { theme in
+                        Text(theme.displayName).tag(theme)
+                    }
+                }
+                .pickerStyle(.segmented)
+
                 Picker("Show window on", selection: $viewModel.windowDisplayPreference) {
                     ForEach(viewModel.displayOptions) { option in
                         Text(option.name).tag(option.preference)

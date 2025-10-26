@@ -6,6 +6,7 @@ struct OverlaySearchField: NSViewRepresentable {
     @Binding var text: String
     var focusTick: Int
     var placeholder: String
+    var style: OverlayThemeStyle
     var onSubmit: () -> Void
     var onCancel: () -> Void
     var onMoveUp: () -> Void
@@ -22,10 +23,10 @@ struct OverlaySearchField: NSViewRepresentable {
         field.isBezeled = false
         field.drawsBackground = false
         field.focusRingType = .none
-        field.font = NSFont.monospacedSystemFont(ofSize: 18, weight: .semibold)
-        field.textColor = .white
+        field.font = style.searchFont
+        field.textColor = style.primaryTextNSColor
         field.placeholderAttributedString = NSAttributedString(string: placeholder,
-                                                               attributes: [.foregroundColor: NSColor.white.withAlphaComponent(0.35)])
+                                                               attributes: [.foregroundColor: style.searchFieldPlaceholderNSColor])
         field.onSubmit = onSubmit
         field.onCancel = onCancel
         field.onMoveUp = onMoveUp
@@ -44,8 +45,10 @@ struct OverlaySearchField: NSViewRepresentable {
         nsView.onCancel = onCancel
         nsView.onMoveUp = onMoveUp
         nsView.onMoveDown = onMoveDown
+        nsView.font = style.searchFont
+        nsView.textColor = style.primaryTextNSColor
         nsView.placeholderAttributedString = NSAttributedString(string: placeholder,
-                                                                attributes: [.foregroundColor: NSColor.white.withAlphaComponent(0.35)])
+                                                                attributes: [.foregroundColor: style.searchFieldPlaceholderNSColor])
 
         if context.coordinator.lastFocusTick != focusTick {
             context.coordinator.lastFocusTick = focusTick

@@ -4,6 +4,8 @@ import SwiftUI
 struct MatchedTextView: View {
     let text: String
     let matchedIndices: [Int]
+    let baseColor: NSColor
+    let highlightColor: NSColor
 
     var body: some View {
         Text(attributedText)
@@ -14,14 +16,14 @@ struct MatchedTextView: View {
     private var attributedText: AttributedString {
         let attributed = NSMutableAttributedString(string: text)
         let fullRange = NSRange(location: 0, length: (text as NSString).length)
-        attributed.addAttribute(.foregroundColor, value: NSColor.white, range: fullRange)
+        attributed.addAttribute(.foregroundColor, value: baseColor, range: fullRange)
 
         matchedIndices.sorted().forEach { index in
             guard index < fullRange.length else { return }
             let range = NSRange(location: index, length: 1)
             attributed.addAttributes([
                 .underlineStyle: NSUnderlineStyle.single.rawValue,
-                .foregroundColor: NSColor.systemRed
+                .foregroundColor: highlightColor
             ], range: range)
         }
 

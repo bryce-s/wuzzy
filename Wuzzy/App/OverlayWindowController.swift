@@ -1,5 +1,6 @@
 import AppKit
 import Combine
+import QuartzCore
 import SwiftUI
 
 final class OverlayWindowController: NSWindowController, NSWindowDelegate {
@@ -8,6 +9,7 @@ final class OverlayWindowController: NSWindowController, NSWindowDelegate {
     private let focusController = OverlayFocusController()
     private let hostingController: NSHostingController<OverlayView>
     private var placementPreference: OverlayDisplayPreference
+    private var isHidingOverlay = false
     private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: OverlayViewModel, settings: SettingsViewModel) {
@@ -28,19 +30,26 @@ final class OverlayWindowController: NSWindowController, NSWindowDelegate {
         panel.backgroundColor = .clear
         panel.hidesOnDeactivate = true
         panel.level = .floating
-        panel.hasShadow = true
+        panel.hasShadow = false
         panel.isReleasedWhenClosed = false
         panel.becomesKeyOnlyIfNeeded = true
         panel.animationBehavior = .utilityWindow
 
-        let rootView = OverlayView(viewModel: viewModel, focusController: focusController) { [weak panel] in
-            panel?.orderOut(nil)
+        var dismissRelay: (() -> Void)?
+        let rootView = OverlayView(viewModel: viewModel,
+                                   focusController: focusController,
+                                   settings: settings) {
+            dismissRelay?()
         }
         hostingController = NSHostingController(rootView: rootView)
         panel.contentViewController = hostingController
 
         super.init(window: panel)
         panel.delegate = self
+
+        dismissRelay = { [weak self] in
+            self?.hideOverlay()
+        }
 
         settings.$windowDisplayPreference
             .receive(on: DispatchQueue.main)
@@ -75,15 +84,31 @@ final class OverlayWindowController: NSWindowController, NSWindowDelegate {
                             display: true)
         }
 
+        window.alphaValue = 0
         NSApp.activate(ignoringOtherApps: true)
         window.makeKeyAndOrderFront(nil)
         viewModel.showOverlay()
         focusSearchField()
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.18
+            context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            window.animator().alphaValue = 1
+        }
     }
 
     func hideOverlay() {
-        window?.orderOut(nil)
-        viewModel.overlayDidHide()
+        guard let window, !isHidingOverlay else { return }
+        isHidingOverlay = true
+        NSAnimationContext.runAnimationGroup({ context in
+            context.duration = 0.12
+            context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            window.animator().alphaValue = 0
+        }, completionHandler: { [weak self] in
+            window.orderOut(nil)
+            window.alphaValue = 1
+            self?.viewModel.overlayDidHide()
+            self?.isHidingOverlay = false
+        })
     }
 
     func focusSearchField() {
@@ -91,8 +116,7 @@ final class OverlayWindowController: NSWindowController, NSWindowDelegate {
     }
 
     func windowDidResignKey(_ notification: Notification) {
-        window?.orderOut(nil)
-        viewModel.overlayDidHide()
+        hideOverlay()
     }
 }
 

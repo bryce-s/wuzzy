@@ -22,11 +22,16 @@ final class SettingsViewModel: ObservableObject {
     @Published private(set) var screenRecordingGranted: Bool
     @Published var windowDisplayPreference: OverlayDisplayPreference
     @Published private(set) var displayOptions: [DisplayOption] = []
+    @Published var theme: OverlayTheme
 
     weak var delegate: SettingsViewModelDelegate?
 
     private let screenRecordingAuthorizer: ScreenRecordingAuthorizer
     private var cancellables = Set<AnyCancellable>()
+
+    var currentThemeStyle: OverlayThemeStyle {
+        theme.style
+    }
 
     init(initialHotkey: Hotkey,
          screenRecordingAuthorizer: ScreenRecordingAuthorizer) {
@@ -35,6 +40,7 @@ final class SettingsViewModel: ObservableObject {
         self.screenRecordingGranted = screenRecordingAuthorizer.isAuthorized
         let defaults = UserDefaults.standard
         self.windowDisplayPreference = OverlayDisplayPreferenceStorage.load(from: defaults) ?? .active
+        self.theme = OverlayThemeStorage.load(from: defaults) ?? .macOS
         updateDisplayOptions()
         bind()
     }
@@ -82,6 +88,14 @@ final class SettingsViewModel: ObservableObject {
                 self?.updateDisplayOptions()
             }
             .store(in: &cancellables)
+
+        $theme
+            .dropFirst()
+            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
+            .sink { newValue in
+                OverlayThemeStorage.store(theme: newValue, defaults: UserDefaults.standard)
+            }
+            .store(in: &cancellables)
     }
 
     func updateDisplayOptions() {
@@ -89,7 +103,7 @@ final class SettingsViewModel: ObservableObject {
 
         var options: [DisplayOption] = [
             DisplayOption(preference: .primary, name: "Primary Display"),
-            DisplayOption(preference: .active, name: "Active Display")
+            DisplayOption(preference: .active, name: "Active Display (under pointer)")
         ]
 
         var availableIdentifiers = Set<String>()
