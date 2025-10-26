@@ -85,36 +85,10 @@ struct OverlayView: View {
     }
 
     private var resultsList: some View {
-        ScrollView {
-            LazyVStack(spacing: 6) {
-                ForEach(viewModel.results) { result in
-                    OverlayRow(result: result,
-                               isSelected: result.window.id == viewModel.selectedWindowID)
-                        .onTapGesture {
-                            viewModel.selectedWindowID = result.window.id
-                        }
-                        .onTapGesture(count: 2) {
-                            viewModel.selectedWindowID = result.window.id
-                            viewModel.activateSelection()
-                        }
-                }
-            }.padding(.top, 4)
-        }
-        .background(Color.black.opacity(0.01))
-        .overlay(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .stroke(Color.white.opacity(0.08), lineWidth: 1)
-        )
-        .onMoveCommand { direction in
-            switch direction {
-            case .down:
-                viewModel.moveSelection(delta: 1)
-            case .up:
-                viewModel.moveSelection(delta: -1)
-            default:
-                break
-            }
-        }
+        ResultsListView(results: viewModel.results,
+                        selectedWindowID: $viewModel.selectedWindowID,
+                        onMove: viewModel.moveSelection,
+                        onActivate: viewModel.activateSelection)
     }
 }
 
@@ -141,5 +115,76 @@ private struct OverlayRow: View {
         )
         .foregroundColor(.white)
         .font(.system(size: 16, weight: .medium, design: .monospaced))
+    }
+}
+
+private struct ResultsListView: View {
+    let results: [FuzzyMatchResult]
+    @Binding var selectedWindowID: CGWindowID?
+    let onMove: (Int) -> Void
+    let onActivate: () -> Void
+
+    var body: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                LazyVStack(spacing: 6) {
+                    ForEach(results) { result in
+                        OverlayRow(result: result,
+                                   isSelected: result.window.id == selectedWindowID)
+                            .id(result.window.id)
+                            .onTapGesture {
+                                selectedWindowID = result.window.id
+                            }
+                            .onTapGesture(count: 2) {
+                                selectedWindowID = result.window.id
+                                onActivate()
+                            }
+                    }
+                }
+                .padding(.top, 4)
+            }
+            .background(Color.black.opacity(0.01))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
+            )
+            .onChange(of: selectedWindowID) { _ in
+                scrollToSelection(proxy: proxy, animated: true)
+            }
+            .onChange(of: results.count) { _ in
+                scrollToSelection(proxy: proxy, animated: false)
+            }
+            .onMoveCommand { direction in
+                switch direction {
+                case .down:
+                    onMove(1)
+                case .up:
+                    onMove(-1)
+                default:
+                    break
+                }
+            }
+            .onAppear {
+                scrollToSelection(proxy: proxy, animated: false)
+            }
+        }
+    }
+
+    private func scrollToSelection(proxy: ScrollViewProxy, animated: Bool) {
+        guard let selectedWindowID else { return }
+        let action = {
+            proxy.scrollTo(selectedWindowID, anchor: .center)
+        }
+        if animated {
+            DispatchQueue.main.async {
+                withAnimation(.easeInOut(duration: 0.15)) {
+                    action()
+                }
+            }
+        } else {
+            DispatchQueue.main.async {
+                action()
+            }
+        }
     }
 }

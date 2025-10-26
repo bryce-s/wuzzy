@@ -89,7 +89,7 @@ final class SettingsViewModel: ObservableObject {
 
         var options: [DisplayOption] = [
             DisplayOption(preference: .primary, name: "Primary Display"),
-            DisplayOption(preference: .active, name: "Active Display (under pointer)")
+            DisplayOption(preference: .active, name: "Active Display")
         ]
 
         var availableIdentifiers = Set<String>()
