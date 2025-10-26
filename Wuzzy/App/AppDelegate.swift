@@ -11,7 +11,8 @@ final class WuzzyAppDelegate: NSObject, NSApplicationDelegate {
                                                          windowIndexer: windowIndexer,
                                                          windowActivator: windowActivator,
                                                          screenRecordingAuthorizer: screenRecordingAuthorizer)
-    private lazy var overlayController = OverlayWindowController(viewModel: overlayViewModel)
+    private lazy var overlayController = OverlayWindowController(viewModel: overlayViewModel,
+                                                                 settings: settingsViewModel)
 
     let settingsViewModel: SettingsViewModel
 

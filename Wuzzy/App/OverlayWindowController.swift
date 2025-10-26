@@ -1,13 +1,19 @@
 import AppKit
+import Combine
 import SwiftUI
 
 final class OverlayWindowController: NSWindowController, NSWindowDelegate {
     private let viewModel: OverlayViewModel
+    private let settings: SettingsViewModel
     private let focusController = OverlayFocusController()
     private let hostingController: NSHostingController<OverlayView>
+    private var placementPreference: OverlayDisplayPreference
+    private var cancellables = Set<AnyCancellable>()
 
-    init(viewModel: OverlayViewModel) {
+    init(viewModel: OverlayViewModel, settings: SettingsViewModel) {
         self.viewModel = viewModel
+        self.settings = settings
+        self.placementPreference = settings.windowDisplayPreference
         let contentRect = NSRect(x: 0, y: 0, width: 600, height: 460)
 
         let panel = NSPanel(contentRect: contentRect,
@@ -35,6 +41,13 @@ final class OverlayWindowController: NSWindowController, NSWindowDelegate {
 
         super.init(window: panel)
         panel.delegate = self
+
+        settings.$windowDisplayPreference
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newValue in
+                self?.placementPreference = newValue
+            }
+            .store(in: &cancellables)
     }
 
     @available(*, unavailable)
@@ -52,7 +65,7 @@ final class OverlayWindowController: NSWindowController, NSWindowDelegate {
 
     func showOverlay() {
         guard let window else { return }
-        if let screen = NSScreen.main {
+        if let screen = screen(for: placementPreference) ?? NSScreen.main ?? NSScreen.screens.first {
             let frame = window.frame
             let screenFrame = screen.frame
             window.setFrame(NSRect(x: screenFrame.midX - frame.width / 2,
@@ -80,5 +93,24 @@ final class OverlayWindowController: NSWindowController, NSWindowDelegate {
     func windowDidResignKey(_ notification: Notification) {
         window?.orderOut(nil)
         viewModel.overlayDidHide()
+    }
+}
+
+private extension OverlayWindowController {
+    func screen(for preference: OverlayDisplayPreference) -> NSScreen? {
+        switch preference {
+        case .primary:
+            return NSScreen.main ?? NSScreen.screens.first
+        case .active:
+            if let match = NSScreen.screens.first(where: { $0.frame.contains(NSEvent.mouseLocation) }) {
+                return match
+            }
+            return screen(for: .primary)
+        case let .display(id, _):
+            if let match = NSScreen.screens.first(where: { $0.displayIdentifier == id }) {
+                return match
+            }
+            return screen(for: .primary)
+        }
     }
 }

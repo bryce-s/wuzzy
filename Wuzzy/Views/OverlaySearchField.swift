@@ -34,6 +34,8 @@ struct OverlaySearchField: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: KeyCaptureTextField, context: Context) {
+        context.coordinator.parent = self
+
         if nsView.stringValue != text {
             nsView.stringValue = text
         }
@@ -44,8 +46,6 @@ struct OverlaySearchField: NSViewRepresentable {
         nsView.onMoveDown = onMoveDown
         nsView.placeholderAttributedString = NSAttributedString(string: placeholder,
                                                                 attributes: [.foregroundColor: NSColor.white.withAlphaComponent(0.35)])
-
-        context.coordinator.parent = self
 
         if context.coordinator.lastFocusTick != focusTick {
             context.coordinator.lastFocusTick = focusTick
@@ -64,14 +64,34 @@ struct OverlaySearchField: NSViewRepresentable {
         var lastFocusTick: Int = 0
 
         func controlTextDidChange(_ obj: Notification) {
-            guard
-                let field = obj.object as? NSTextField,
-                let parent
-            else {
+            guard let field = obj.object as? NSTextField else {
                 return
             }
-            if parent.text != field.stringValue {
-                parent.text = field.stringValue
+            parent?.text = field.stringValue
+        }
+
+        func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+            guard let parent else { return false }
+
+            switch commandSelector {
+            case #selector(NSResponder.insertNewline(_:)),
+                 #selector(NSResponder.insertNewlineIgnoringFieldEditor(_:)),
+                 #selector(NSResponder.insertLineBreak(_:)):
+                parent.onSubmit()
+                return true
+            case #selector(NSResponder.cancelOperation(_:)):
+                parent.onCancel()
+                return true
+            case #selector(NSResponder.moveUp(_:)),
+                 #selector(NSResponder.moveUpAndModifySelection(_:)):
+                parent.onMoveUp()
+                return true
+            case #selector(NSResponder.moveDown(_:)),
+                 #selector(NSResponder.moveDownAndModifySelection(_:)):
+                parent.onMoveDown()
+                return true
+            default:
+                return false
             }
         }
     }

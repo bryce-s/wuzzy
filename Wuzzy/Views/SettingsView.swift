@@ -10,6 +10,15 @@ struct SettingsView: View {
                 HotkeyRecorderView(hotkey: $viewModel.hotkey)
             }
 
+            Section(header: Text("Overlay Placement")) {
+                Picker("Show window on", selection: $viewModel.windowDisplayPreference) {
+                    ForEach(viewModel.displayOptions) { option in
+                        Text(option.name).tag(option.preference)
+                    }
+                }
+                .pickerStyle(.menu)
+            }
+
             Section(header: Text("Permissions")) {
                 HStack {
                     Label(viewModel.accessibilityGranted ? "Accessibility enabled" : "Accessibility required",
@@ -48,6 +57,9 @@ struct SettingsView: View {
         }
         .padding(16)
         .frame(minWidth: 340)
+        .onAppear {
+            viewModel.updateDisplayOptions()
+        }
     }
 
     private func openAccessibilitySettings() {

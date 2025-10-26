@@ -45,11 +45,6 @@ final class WindowIndexer {
         }
 
         let now = Date()
-        let blacklistLayers: Set<Int> = [
-            Int(CGWindowLevelForKey(.desktopWindow)),
-            Int(CGWindowLevelForKey(.desktopIconWindow))
-        ]
-
         return array.compactMap { dict -> WindowInfo? in
             guard
                 let ownerName = dict[kCGWindowOwnerName as String] as? String,
@@ -62,11 +57,12 @@ final class WindowIndexer {
                 return nil
             }
 
-            if blacklistLayers.contains(layer) {
+            let rawTitle = (dict[kCGWindowName as String] as? String) ?? ""
+
+            if !Self.shouldInclude(ownerName: ownerName, layer: layer, title: rawTitle, height: height) {
                 return nil
             }
 
-            let rawTitle = (dict[kCGWindowName as String] as? String) ?? ""
             let resolvedTitle = rawTitle.isEmpty ? (titleResolver.resolvedTitle(for: CGWindowID(windowNumber),
                                                                                 ownerPID: ownerPID) ?? "") : rawTitle
             let finalTitle = resolvedTitle.isEmpty ? "Untitled" : resolvedTitle
@@ -82,4 +78,40 @@ final class WindowIndexer {
                               lastUpdated: now)
         }
     }
+
+    static func shouldInclude(ownerName: String, layer: Int, title: String, height: Double) -> Bool {
+        if excludedOwners.contains(ownerName) {
+            return false
+        }
+
+        if bannedPrefixes.contains(where: { ownerName.hasPrefix($0) }) {
+            return false
+        }
+
+        if layerSet.contains(layer) {
+            return false
+        }
+
+        if title.isEmpty && height < 5 {
+            return false
+        }
+
+        return true
+    }
+
+    private static let excludedOwners: Set<String> = {
+        var set: Set<String> = ["Window Server", "Notification Center", "Control Center"]
+        if let bundleName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String {
+            set.insert(bundleName)
+        }
+        set.insert("Wuzzy")
+        return set
+    }()
+
+    private static let bannedPrefixes: [String] = ["WindowServer"]
+
+    private static let layerSet: Set<Int> = [
+        Int(CGWindowLevelForKey(.desktopWindow)),
+        Int(CGWindowLevelForKey(.desktopIconWindow))
+    ]
 }
