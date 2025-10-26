@@ -1,0 +1,523 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7A4C2B002B4A4E6A001CE1A1 /* WuzzyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AE52B4A4E6A001CE1A1 /* WuzzyApp.swift */; };
+		7A4C2B012B4A4E6A001CE1A1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AE62B4A4E6A001CE1A1 /* AppDelegate.swift */; };
+		7A4C2B022B4A4E6A001CE1A1 /* OverlayWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AE72B4A4E6A001CE1A1 /* OverlayWindowController.swift */; };
+		7A4C2B032B4A4E6A001CE1A1 /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AE82B4A4E6A001CE1A1 /* HotkeyManager.swift */; };
+		7A4C2B042B4A4E6A001CE1A1 /* WindowIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AE92B4A4E6A001CE1A1 /* WindowIndexer.swift */; };
+        7A4C2B452B4A4E6A001CE1A1 /* WindowActivator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AEA2B4A4E6A001CE1A1 /* WindowActivator.swift */; };
+        7A4C2B052B4A4E6A001CE1A1 /* AccessibilityAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AEB2B4A4E6A001CE1A1 /* AccessibilityAuthorizer.swift */; };
+        7A4C2C5E2B4A4E6A001CE1A1 /* ScreenRecordingAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2C5F2B4A4E6A001CE1A1 /* ScreenRecordingAuthorizer.swift */; };
+		7A4C2B062B4A4E6A001CE1A1 /* Hotkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AEC2B4A4E6A001CE1A1 /* Hotkey.swift */; };
+		7A4C2B072B4A4E6A001CE1A1 /* WindowInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AED2B4A4E6A001CE1A1 /* WindowInfo.swift */; };
+		7A4C2B082B4A4E6A001CE1A1 /* OverlayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AEE2B4A4E6A001CE1A1 /* OverlayViewModel.swift */; };
+		7A4C2B092B4A4E6A001CE1A1 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AEF2B4A4E6A001CE1A1 /* SettingsViewModel.swift */; };
+		7A4C2B0A2B4A4E6A001CE1A1 /* FuzzyMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AF02B4A4E6A001CE1A1 /* FuzzyMatcher.swift */; };
+		7A4C2B0B2B4A4E6A001CE1A1 /* KeyCodeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AF12B4A4E6A001CE1A1 /* KeyCodeMapper.swift */; };
+		7A4C2B0C2B4A4E6A001CE1A1 /* OverlayFocusController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AF22B4A4E6A001CE1A1 /* OverlayFocusController.swift */; };
+		7A4C2B0D2B4A4E6A001CE1A1 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AF32B4A4E6A001CE1A1 /* OverlayView.swift */; };
+		7A4C2B0E2B4A4E6A001CE1A1 /* MatchedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AF42B4A4E6A001CE1A1 /* MatchedTextView.swift */; };
+		7A4C2B0F2B4A4E6A001CE1A1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AF52B4A4E6A001CE1A1 /* SettingsView.swift */; };
+        7A4C2B102B4A4E6A001CE1A1 /* HotkeyRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AF62B4A4E6A001CE1A1 /* HotkeyRecorderView.swift */; };
+        7A4C2C5C2B4A4E6A001CE1A1 /* OverlaySearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2C5D2B4A4E6A001CE1A1 /* OverlaySearchField.swift */; };
+		7A4C2B112B4A4E6A001CE1A1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A4C2AF72B4A4E6A001CE1A1 /* Assets.xcassets */; };
+		7A4C2B132B4A4E6A001CE1A1 /* FuzzyMatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2AF92B4A4E6A001CE1A1 /* FuzzyMatcherTests.swift */; };
+		7A4C2C582B4A4E6A001CE1A1 /* AccessibilityHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2C592B4A4E6A001CE1A1 /* AccessibilityHelpers.swift */; };
+		7A4C2C5A2B4A4E6A001CE1A1 /* AccessibilityWindowTitleResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2C5B2B4A4E6A001CE1A1 /* AccessibilityWindowTitleResolver.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7A4C2B162B4A4E6A001CE1A1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A4C2AD92B4A4E6A001CE1A1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A4C2AE12B4A4E6A001CE1A1;
+			remoteInfo = Wuzzy;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		7A4C2AE52B4A4E6A001CE1A1 /* WuzzyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WuzzyApp.swift; sourceTree = "<group>"; };
+		7A4C2AE62B4A4E6A001CE1A1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7A4C2AE72B4A4E6A001CE1A1 /* OverlayWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindowController.swift; sourceTree = "<group>"; };
+		7A4C2AE82B4A4E6A001CE1A1 /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
+		7A4C2AE92B4A4E6A001CE1A1 /* WindowIndexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowIndexer.swift; sourceTree = "<group>"; };
+		7A4C2AEA2B4A4E6A001CE1A1 /* WindowActivator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowActivator.swift; sourceTree = "<group>"; };
+        7A4C2AEB2B4A4E6A001CE1A1 /* AccessibilityAuthorizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityAuthorizer.swift; sourceTree = "<group>"; };
+        7A4C2C5F2B4A4E6A001CE1A1 /* ScreenRecordingAuthorizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenRecordingAuthorizer.swift; sourceTree = "<group>"; };
+		7A4C2AEC2B4A4E6A001CE1A1 /* Hotkey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hotkey.swift; sourceTree = "<group>"; };
+		7A4C2AED2B4A4E6A001CE1A1 /* WindowInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfo.swift; sourceTree = "<group>"; };
+		7A4C2AEE2B4A4E6A001CE1A1 /* OverlayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayViewModel.swift; sourceTree = "<group>"; };
+		7A4C2AEF2B4A4E6A001CE1A1 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		7A4C2AF02B4A4E6A001CE1A1 /* FuzzyMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuzzyMatcher.swift; sourceTree = "<group>"; };
+		7A4C2AF12B4A4E6A001CE1A1 /* KeyCodeMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCodeMapper.swift; sourceTree = "<group>"; };
+		7A4C2AF22B4A4E6A001CE1A1 /* OverlayFocusController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayFocusController.swift; sourceTree = "<group>"; };
+		7A4C2AF32B4A4E6A001CE1A1 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
+		7A4C2AF42B4A4E6A001CE1A1 /* MatchedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchedTextView.swift; sourceTree = "<group>"; };
+		7A4C2AF52B4A4E6A001CE1A1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+        7A4C2AF62B4A4E6A001CE1A1 /* HotkeyRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyRecorderView.swift; sourceTree = "<group>"; };
+        7A4C2C5D2B4A4E6A001CE1A1 /* OverlaySearchField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlaySearchField.swift; sourceTree = "<group>"; };
+		7A4C2AF72B4A4E6A001CE1A1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7A4C2AF82B4A4E6A001CE1A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7A4C2AF92B4A4E6A001CE1A1 /* FuzzyMatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuzzyMatcherTests.swift; sourceTree = "<group>"; };
+		7A4C2AFA2B4A4E6A001CE1A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7A4C2AFB2B4A4E6A001CE1A1 /* Wuzzy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wuzzy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A4C2AFC2B4A4E6A001CE1A1 /* WuzzyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WuzzyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A4C2C592B4A4E6A001CE1A1 /* AccessibilityHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityHelpers.swift; sourceTree = "<group>"; };
+		7A4C2C5B2B4A4E6A001CE1A1 /* AccessibilityWindowTitleResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityWindowTitleResolver.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7A4C2ADE2B4A4E6A001CE1A1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A4C2B142B4A4E6A001CE1A1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7A4C2AD82B4A4E6A001CE1A1 = {
+			isa = PBXGroup;
+			children = (
+				7A4C2AE42B4A4E6A001CE1A1 /* Wuzzy */,
+				7A4C2C502B4A4E6A001CE1A1 /* WuzzyTests */,
+				7A4C2C512B4A4E6A001CE1A1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7A4C2AE42B4A4E6A001CE1A1 /* Wuzzy */ = {
+			isa = PBXGroup;
+			children = (
+				7A4C2AFD2B4A4E6A001CE1A1 /* App */,
+				7A4C2AFE2B4A4E6A001CE1A1 /* Managers */,
+				7A4C2AFF2B4A4E6A001CE1A1 /* Models */,
+				7A4C2C522B4A4E6A001CE1A1 /* ViewModels */,
+				7A4C2C532B4A4E6A001CE1A1 /* Utilities */,
+				7A4C2C542B4A4E6A001CE1A1 /* Views */,
+				7A4C2C552B4A4E6A001CE1A1 /* Resources */,
+			);
+			path = Wuzzy;
+			sourceTree = "<group>";
+		};
+		7A4C2C502B4A4E6A001CE1A1 /* WuzzyTests */ = {
+			isa = PBXGroup;
+			children = (
+				7A4C2AF92B4A4E6A001CE1A1 /* FuzzyMatcherTests.swift */,
+				7A4C2AFA2B4A4E6A001CE1A1 /* Info.plist */,
+			);
+			path = WuzzyTests;
+			sourceTree = "<group>";
+		};
+		7A4C2C512B4A4E6A001CE1A1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7A4C2AFB2B4A4E6A001CE1A1 /* Wuzzy.app */,
+				7A4C2AFC2B4A4E6A001CE1A1 /* WuzzyTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7A4C2AFD2B4A4E6A001CE1A1 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				7A4C2AE52B4A4E6A001CE1A1 /* WuzzyApp.swift */,
+				7A4C2AE62B4A4E6A001CE1A1 /* AppDelegate.swift */,
+				7A4C2AE72B4A4E6A001CE1A1 /* OverlayWindowController.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		7A4C2AFE2B4A4E6A001CE1A1 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				7A4C2AE82B4A4E6A001CE1A1 /* HotkeyManager.swift */,
+				7A4C2AE92B4A4E6A001CE1A1 /* WindowIndexer.swift */,
+                7A4C2AEA2B4A4E6A001CE1A1 /* WindowActivator.swift */,
+                7A4C2AEB2B4A4E6A001CE1A1 /* AccessibilityAuthorizer.swift */,
+                7A4C2C5F2B4A4E6A001CE1A1 /* ScreenRecordingAuthorizer.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		7A4C2AFF2B4A4E6A001CE1A1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7A4C2AEC2B4A4E6A001CE1A1 /* Hotkey.swift */,
+				7A4C2AED2B4A4E6A001CE1A1 /* WindowInfo.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		7A4C2C522B4A4E6A001CE1A1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				7A4C2AEE2B4A4E6A001CE1A1 /* OverlayViewModel.swift */,
+				7A4C2AEF2B4A4E6A001CE1A1 /* SettingsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		7A4C2C532B4A4E6A001CE1A1 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				7A4C2AF02B4A4E6A001CE1A1 /* FuzzyMatcher.swift */,
+				7A4C2AF12B4A4E6A001CE1A1 /* KeyCodeMapper.swift */,
+				7A4C2AF22B4A4E6A001CE1A1 /* OverlayFocusController.swift */,
+				7A4C2C592B4A4E6A001CE1A1 /* AccessibilityHelpers.swift */,
+				7A4C2C5B2B4A4E6A001CE1A1 /* AccessibilityWindowTitleResolver.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		7A4C2C542B4A4E6A001CE1A1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+                7A4C2AF32B4A4E6A001CE1A1 /* OverlayView.swift */,
+                7A4C2C5D2B4A4E6A001CE1A1 /* OverlaySearchField.swift */,
+                7A4C2AF42B4A4E6A001CE1A1 /* MatchedTextView.swift */,
+				7A4C2AF52B4A4E6A001CE1A1 /* SettingsView.swift */,
+				7A4C2AF62B4A4E6A001CE1A1 /* HotkeyRecorderView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7A4C2C552B4A4E6A001CE1A1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7A4C2AF72B4A4E6A001CE1A1 /* Assets.xcassets */,
+				7A4C2AF82B4A4E6A001CE1A1 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7A4C2AE12B4A4E6A001CE1A1 /* Wuzzy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A4C2C562B4A4E6A001CE1A1 /* Build configuration list for PBXNativeTarget "Wuzzy" */;
+			buildPhases = (
+				7A4C2ADE2B4A4E6A001CE1A1 /* Frameworks */,
+				7A4C2ADF2B4A4E6A001CE1A1 /* Sources */,
+				7A4C2AE02B4A4E6A001CE1A1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Wuzzy;
+			productName = Wuzzy;
+			productReference = 7A4C2AFB2B4A4E6A001CE1A1 /* Wuzzy.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7A4C2B152B4A4E6A001CE1A1 /* WuzzyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A4C2C572B4A4E6A001CE1A1 /* Build configuration list for PBXNativeTarget "WuzzyTests" */;
+			buildPhases = (
+				7A4C2B122B4A4E6A001CE1A1 /* Sources */,
+				7A4C2B142B4A4E6A001CE1A1 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A4C2B172B4A4E6A001CE1A1 /* PBXTargetDependency */,
+			);
+			name = WuzzyTests;
+			productName = WuzzyTests;
+			productReference = 7A4C2AFC2B4A4E6A001CE1A1 /* WuzzyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7A4C2AD92B4A4E6A001CE1A1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				ORGANIZATIONNAME = "Bryce Smith";
+				TargetAttributes = {
+					7A4C2AE12B4A4E6A001CE1A1 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					7A4C2B152B4A4E6A001CE1A1 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 7A4C2ADC2B4A4E6A001CE1A1 /* Build configuration list for PBXProject "Wuzzy" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7A4C2AD82B4A4E6A001CE1A1;
+			productRefGroup = 7A4C2C512B4A4E6A001CE1A1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7A4C2AE12B4A4E6A001CE1A1 /* Wuzzy */,
+				7A4C2B152B4A4E6A001CE1A1 /* WuzzyTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7A4C2AE02B4A4E6A001CE1A1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A4C2B112B4A4E6A001CE1A1 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7A4C2ADF2B4A4E6A001CE1A1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A4C2B002B4A4E6A001CE1A1 /* WuzzyApp.swift in Sources */,
+				7A4C2B012B4A4E6A001CE1A1 /* AppDelegate.swift in Sources */,
+				7A4C2B022B4A4E6A001CE1A1 /* OverlayWindowController.swift in Sources */,
+				7A4C2B032B4A4E6A001CE1A1 /* HotkeyManager.swift in Sources */,
+				7A4C2B042B4A4E6A001CE1A1 /* WindowIndexer.swift in Sources */,
+				7A4C2B452B4A4E6A001CE1A1 /* WindowActivator.swift in Sources */,
+				7A4C2B052B4A4E6A001CE1A1 /* AccessibilityAuthorizer.swift in Sources */,
+				7A4C2B062B4A4E6A001CE1A1 /* Hotkey.swift in Sources */,
+				7A4C2B072B4A4E6A001CE1A1 /* WindowInfo.swift in Sources */,
+				7A4C2B082B4A4E6A001CE1A1 /* OverlayViewModel.swift in Sources */,
+				7A4C2B092B4A4E6A001CE1A1 /* SettingsViewModel.swift in Sources */,
+				7A4C2B0A2B4A4E6A001CE1A1 /* FuzzyMatcher.swift in Sources */,
+				7A4C2B0B2B4A4E6A001CE1A1 /* KeyCodeMapper.swift in Sources */,
+				7A4C2B0C2B4A4E6A001CE1A1 /* OverlayFocusController.swift in Sources */,
+				7A4C2B0D2B4A4E6A001CE1A1 /* OverlayView.swift in Sources */,
+				7A4C2B0E2B4A4E6A001CE1A1 /* MatchedTextView.swift in Sources */,
+                7A4C2B0F2B4A4E6A001CE1A1 /* SettingsView.swift in Sources */,
+                7A4C2B102B4A4E6A001CE1A1 /* HotkeyRecorderView.swift in Sources */,
+                7A4C2C5C2B4A4E6A001CE1A1 /* OverlaySearchField.swift in Sources */,
+                7A4C2C582B4A4E6A001CE1A1 /* AccessibilityHelpers.swift in Sources */,
+                7A4C2C5A2B4A4E6A001CE1A1 /* AccessibilityWindowTitleResolver.swift in Sources */,
+                7A4C2C5E2B4A4E6A001CE1A1 /* ScreenRecordingAuthorizer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A4C2B122B4A4E6A001CE1A1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A4C2B132B4A4E6A001CE1A1 /* FuzzyMatcherTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7A4C2B172B4A4E6A001CE1A1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A4C2AE12B4A4E6A001CE1A1 /* Wuzzy */;
+			targetProxy = 7A4C2B162B4A4E6A001CE1A1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		7A4C2B182B4A4E6A001CE1A1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 Bryce Smith. All rights reserved.";
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brycesmith.wuzzy;
+				PRODUCT_NAME = Wuzzy;
+				SWIFT_VERSION = 5.0;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				INFOPLIST_FILE = Wuzzy/Resources/Info.plist;
+			};
+			name = Debug;
+		};
+		7A4C2B192B4A4E6A001CE1A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 Bryce Smith. All rights reserved.";
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brycesmith.wuzzy;
+				PRODUCT_NAME = Wuzzy;
+				SWIFT_VERSION = 5.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				INFOPLIST_FILE = Wuzzy/Resources/Info.plist;
+			};
+			name = Release;
+		};
+		7A4C2B1A2B4A4E6A001CE1A1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		7A4C2B1B2B4A4E6A001CE1A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		7A4C2B1C2B4A4E6A001CE1A1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = WuzzyTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.brycesmith.wuzzyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Wuzzy.app/Contents/MacOS/Wuzzy";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		7A4C2B1D2B4A4E6A001CE1A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = WuzzyTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.brycesmith.wuzzyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Wuzzy.app/Contents/MacOS/Wuzzy";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7A4C2ADC2B4A4E6A001CE1A1 /* Build configuration list for PBXProject "Wuzzy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A4C2B1A2B4A4E6A001CE1A1 /* Debug */,
+				7A4C2B1B2B4A4E6A001CE1A1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7A4C2C562B4A4E6A001CE1A1 /* Build configuration list for PBXNativeTarget "Wuzzy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A4C2B182B4A4E6A001CE1A1 /* Debug */,
+				7A4C2B192B4A4E6A001CE1A1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7A4C2C572B4A4E6A001CE1A1 /* Build configuration list for PBXNativeTarget "WuzzyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A4C2B1C2B4A4E6A001CE1A1 /* Debug */,
+				7A4C2B1D2B4A4E6A001CE1A1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = 7A4C2AD92B4A4E6A001CE1A1 /* Project object */;
+}
