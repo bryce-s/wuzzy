@@ -13,86 +13,74 @@ struct OverlaySearchField: NSViewRepresentable {
     var onMoveDown: () -> Void
 
     func makeCoordinator() -> Coordinator {
-        Coordinator()
+        Coordinator(parent: self)
     }
 
-    func makeNSView(context: Context) -> KeyCaptureTextField {
-        let field = KeyCaptureTextField()
+    func makeNSView(context: Context) -> SpotlightSearchField {
+        let field = SpotlightSearchField(frame: .zero)
         field.delegate = context.coordinator
-        field.isBordered = false
-        field.isBezeled = false
-        field.drawsBackground = false
         field.focusRingType = .none
-        field.font = style.searchFont
-        field.textColor = style.primaryTextNSColor
-        field.placeholderAttributedString = NSAttributedString(string: placeholder,
-                                                               attributes: [.foregroundColor: style.searchFieldPlaceholderNSColor])
-        field.onSubmit = onSubmit
-        field.onCancel = onCancel
-        field.onMoveUp = onMoveUp
-        field.onMoveDown = onMoveDown
+        field.drawsBackground = false
+        field.isBordered = false
+        field.applySpotlightAppearance()
+        context.coordinator.configure(field)
         return field
     }
 
-    func updateNSView(_ nsView: KeyCaptureTextField, context: Context) {
+    func updateNSView(_ nsView: SpotlightSearchField, context: Context) {
         context.coordinator.parent = self
+        context.coordinator.configure(nsView)
 
         if nsView.stringValue != text {
             nsView.stringValue = text
         }
 
-        nsView.onSubmit = onSubmit
-        nsView.onCancel = onCancel
-        nsView.onMoveUp = onMoveUp
-        nsView.onMoveDown = onMoveDown
-        nsView.font = style.searchFont
-        nsView.textColor = style.primaryTextNSColor
-        nsView.placeholderAttributedString = NSAttributedString(string: placeholder,
-                                                                attributes: [.foregroundColor: style.searchFieldPlaceholderNSColor])
-
         if context.coordinator.lastFocusTick != focusTick {
             context.coordinator.lastFocusTick = focusTick
-            if let window = nsView.window {
-                window.makeFirstResponder(nsView)
-            } else {
-                DispatchQueue.main.async {
-                    nsView.window?.makeFirstResponder(nsView)
-                }
+            DispatchQueue.main.async {
+                nsView.window?.makeFirstResponder(nsView)
             }
         }
     }
 
-    final class Coordinator: NSObject, NSTextFieldDelegate {
-        var parent: OverlaySearchField?
+    final class Coordinator: NSObject, NSSearchFieldDelegate, NSTextFieldDelegate {
+        var parent: OverlaySearchField
         var lastFocusTick: Int = 0
 
+        init(parent: OverlaySearchField) {
+            self.parent = parent
+        }
+
+        func configure(_ field: SpotlightSearchField) {
+            field.onSubmit = parent.onSubmit
+            field.onCancel = parent.onCancel
+            field.onMoveUp = parent.onMoveUp
+            field.onMoveDown = parent.onMoveDown
+            field.textColor = parent.style.primaryTextNSColor
+            field.placeholderString = parent.placeholder
+            field.setFont(parent.style.searchFont)
+            field.hideSearchButtons(true)
+        }
+
         func controlTextDidChange(_ obj: Notification) {
-            guard let field = obj.object as? NSTextField else {
-                return
-            }
-            parent?.text = field.stringValue
+            guard let field = obj.object as? NSTextField else { return }
+            parent.text = field.stringValue
         }
 
         func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
-            guard let parent else { return false }
-
             switch commandSelector {
             case #selector(NSResponder.insertNewline(_:)),
                  #selector(NSResponder.insertNewlineIgnoringFieldEditor(_:)),
                  #selector(NSResponder.insertLineBreak(_:)):
-                parent.onSubmit()
-                return true
+                parent.onSubmit(); return true
             case #selector(NSResponder.cancelOperation(_:)):
-                parent.onCancel()
-                return true
+                parent.onCancel(); return true
             case #selector(NSResponder.moveUp(_:)),
                  #selector(NSResponder.moveUpAndModifySelection(_:)):
-                parent.onMoveUp()
-                return true
+                parent.onMoveUp(); return true
             case #selector(NSResponder.moveDown(_:)),
                  #selector(NSResponder.moveDownAndModifySelection(_:)):
-                parent.onMoveDown()
-                return true
+                parent.onMoveDown(); return true
             default:
                 return false
             }
@@ -100,11 +88,41 @@ struct OverlaySearchField: NSViewRepresentable {
     }
 }
 
-final class KeyCaptureTextField: NSTextField {
+final class SpotlightSearchField: NSSearchField {
     var onSubmit: (() -> Void)?
     var onCancel: (() -> Void)?
     var onMoveUp: (() -> Void)?
     var onMoveDown: (() -> Void)?
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        usesSingleLineMode = true
+        sendsWholeSearchString = true
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func applySpotlightAppearance() {
+        guard let cell = cell as? NSSearchFieldCell else { return }
+        cell.backgroundColor = .clear
+        cell.drawsBackground = false
+        cell.searchButtonCell?.isTransparent = true
+        cell.cancelButtonCell?.isTransparent = true
+        bezelStyle = .roundedBezel
+    }
+
+    func setFont(_ font: NSFont) {
+        self.font = font
+        (cell as? NSSearchFieldCell)?.font = font
+    }
+
+    func hideSearchButtons(_ hidden: Bool) {
+        guard let cell = cell as? NSSearchFieldCell else { return }
+        cell.searchButtonCell?.isTransparent = hidden
+        cell.cancelButtonCell?.isTransparent = hidden
+    }
 
     override func keyDown(with event: NSEvent) {
         switch Int(event.keyCode) {

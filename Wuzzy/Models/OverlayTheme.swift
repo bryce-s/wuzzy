@@ -23,23 +23,25 @@ struct OverlayThemeStyle {
     let matchUnderlineColor: NSColor
     let searchFont: NSFont
     let resultFont: Font
+    let usesSpotlightSearchField: Bool
 
     static let macOS = OverlayThemeStyle(
-        background: Color(NSColor.windowBackgroundColor).opacity(0.98),
-        border: Color.black.opacity(0.12),
+        background: Color(NSColor.windowBackgroundColor).opacity(0.97),
+        border: Color.black.opacity(0.08),
         borderWidth: 0,
-        borderShadow: Shadow(color: Color.black.opacity(0.18), radius: 18, x: 0, y: 12),
-        primaryText: Color.primary,
-        secondaryText: Color(NSColor.secondaryLabelColor),
-        searchFieldBackground: Color.white.opacity(0.95),
-        searchFieldBorder: Color.black.opacity(0.08),
-        searchFieldPlaceholder: Color.gray.opacity(0.6),
-        highlightBackground: Color(NSColor.controlAccentColor).opacity(0.18),
+        borderShadow: Shadow(color: Color.black.opacity(0.20), radius: 22, x: 0, y: 14),
+        primaryText: Color(nsColor: NSColor.labelColor),
+        secondaryText: Color(nsColor: NSColor.secondaryLabelColor),
+        searchFieldBackground: Color.black.opacity(0.08),
+        searchFieldBorder: Color.black.opacity(0.12),
+        searchFieldPlaceholder: Color(nsColor: NSColor.placeholderTextColor),
+        highlightBackground: Color(NSColor.controlAccentColor).opacity(0.22),
         highlightBorder: Color(NSColor.controlAccentColor).opacity(0.55),
-        highlightText: Color.primary,
+        highlightText: Color(nsColor: NSColor.labelColor),
         matchUnderlineColor: NSColor.controlAccentColor,
         searchFont: NSFont.systemFont(ofSize: 20, weight: .medium),
-        resultFont: .system(size: 17, weight: .regular, design: .default)
+        resultFont: .system(size: 17, weight: .regular, design: .default),
+        usesSpotlightSearchField: true
     )
 
     static let hacker = OverlayThemeStyle(
@@ -57,7 +59,8 @@ struct OverlayThemeStyle {
         highlightText: Color.white,
         matchUnderlineColor: NSColor.systemRed,
         searchFont: NSFont.monospacedSystemFont(ofSize: 18, weight: .semibold),
-        resultFont: .system(size: 16, weight: .medium, design: .monospaced)
+        resultFont: .system(size: 16, weight: .medium, design: .monospaced),
+        usesSpotlightSearchField: true
     )
 }
 

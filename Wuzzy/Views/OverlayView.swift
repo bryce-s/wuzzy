@@ -39,25 +39,16 @@ struct OverlayView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 8) {
-            OverlaySearchField(text: $viewModel.query,
-                               focusTick: focusController.focusTick,
-                               placeholder: "Search windows…",
-                               style: theme,
-                               onSubmit: { viewModel.activateSelection() },
-                               onCancel: { viewModel.requestDismiss() },
-                               onMoveUp: { viewModel.moveSelection(delta: -1) },
-                               onMoveDown: { viewModel.moveSelection(delta: 1) })
-                .padding(.horizontal, 10)
-                .padding(.vertical, 8)
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(theme.searchFieldBackground)
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(theme.searchFieldBorder, lineWidth: 1)
-                )
-                .foregroundColor(theme.primaryText)
+            SearchFieldContainer(theme: theme) {
+                OverlaySearchField(text: $viewModel.query,
+                                   focusTick: focusController.focusTick,
+                                   placeholder: "Search windows…",
+                                   style: theme,
+                                   onSubmit: { viewModel.activateSelection() },
+                                   onCancel: { viewModel.requestDismiss() },
+                                   onMoveUp: { viewModel.moveSelection(delta: -1) },
+                                   onMoveDown: { viewModel.moveSelection(delta: 1) })
+            }
 
             if !viewModel.accessibilityGranted {
                 accessibilityPrompt
@@ -235,6 +226,31 @@ private extension OverlayView {
             cornerShape.stroke(theme.border, lineWidth: theme.borderWidth)
         } else {
             EmptyView()
+        }
+    }
+}
+
+private struct SearchFieldContainer<Content: View>: View {
+    let theme: OverlayThemeStyle
+    @ViewBuilder var content: () -> Content
+
+    var body: some View {
+        if theme.usesSpotlightSearchField {
+            content()
+                .padding(.horizontal, 4)
+                .padding(.vertical, 4)
+        } else {
+            content()
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(theme.searchFieldBackground)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(theme.searchFieldBorder, lineWidth: 1)
+                )
         }
     }
 }
