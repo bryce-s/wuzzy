@@ -36,3 +36,6 @@ xcodebuild -project Wuzzy.xcodeproj \
 
 ## Accessibility Access
 Wuzzy uses the Accessibility APIs to raise windows from other applications. If macOS reports that access is not granted, open System Settings ▸ Privacy & Security ▸ Accessibility and allow Wuzzy.
+
+## Limitations
+- Google Chrome (and some Chromium-based apps) refuse the `AXRaise`/`AXShow` accessibility actions with `kAXErrorCannotComplete`. Because Wuzzy relies on those calls to focus a specific window, Chrome windows cannot currently be raised individually—only the application comes to the front.
