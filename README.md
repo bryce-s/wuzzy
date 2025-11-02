@@ -7,6 +7,13 @@ Wuzzy is a SwiftUI-powered macOS window switcher that delivers instant fuzzy sea
 - Xcode 15 or newer (for building)
 - Accessibility permission granted to Wuzzy (required to focus other apps)
 
+## Installing via Homebrew
+1. Install Homebrew if it is not already available.
+2. Add the tap: `brew tap bryce-s/wuzzy`
+3. Install the cask: `brew install --cask wuzzy`
+4. Launch Wuzzy from `/Applications` or with Spotlight.
+5. To remove it later: `brew uninstall wuzzy && brew untap bryce-s/wuzzy`
+
 ## Building & Running
 1. Open `Wuzzy.xcodeproj` in Xcode.
 2. Select the **Wuzzy** scheme.
@@ -20,6 +27,46 @@ xcodebuild -project Wuzzy.xcodeproj \
            build
 ```
 The resulting app bundle will be available under `build/Debug/Wuzzy.app`.
+
+## Publishing a Homebrew Release
+Follow these steps whenever you cut a new version for the tap.
+
+1. **Build the Release Artifact**
+   ```bash
+   xcodebuild -project Wuzzy.xcodeproj \
+              -scheme Wuzzy \
+              -configuration Release \
+              -derivedDataPath BuildDerivedData \
+              build
+
+   ditto -c -k --sequesterRsrc --keepParent \
+         BuildDerivedData/Build/Products/Release/Wuzzy.app \
+         Wuzzy-<version>.zip
+   ```
+   Replace `<version>` with the semantic version you are releasing.
+2. **Record the Checksum**  
+   `shasum -a 256 Wuzzy-<version>.zip`
+3. **Publish the Artifact**  
+   Use the GitHub CLI (from either the Wuzzy repo or this tap) to attach the zip to a release in `github.com/bryce-s/wuzzy`:
+   ```bash
+   gh release create v<version> Wuzzy-<version>.zip \
+     --repo bryce-s/wuzzy \
+     --title "Wuzzy <version>" \
+     --notes "Release notes go here."
+   ```
+   If the tag already exists, swap `create` for `upload` and add `--clobber` to replace the asset.
+4. **Update the Tap**  
+   Edit `Casks/wuzzy.rb` with the new `version`, `sha256`, and `url` (the URL should point at the uploaded zip on GitHub Releases).
+5. **Commit and Push**  
+   `git add Casks/wuzzy.rb && git commit -m "Update Wuzzy to <version>" && git push`
+6. **Verify the Install**  
+   On a clean machine (or after untapping), run:
+   ```bash
+   brew untap bryce-s/wuzzy || true
+   brew tap bryce-s/wuzzy
+   brew install --cask wuzzy
+   ```
+   Confirm that the install succeeds and Wuzzy launches.
 
 ## Testing
 Execute the unit tests from Xcode (`⌘U`) or via CLI:
