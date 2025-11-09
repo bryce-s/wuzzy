@@ -7,6 +7,7 @@ final class WuzzyAppDelegate: NSObject, NSApplicationDelegate {
     private let windowActivator = WindowActivator()
     private let searchEngine = FuzzyMatcher()
     private let screenRecordingAuthorizer = ScreenRecordingAuthorizer()
+    private let menuBarManager = MenuBarManager()
     private lazy var overlayViewModel = OverlayViewModel(searchEngine: searchEngine,
                                                          windowIndexer: windowIndexer,
                                                          windowActivator: windowActivator,
@@ -33,6 +34,13 @@ final class WuzzyAppDelegate: NSObject, NSApplicationDelegate {
         settingsViewModel.refreshAccessibilityState()
         settingsViewModel.updateScreenRecordingStatus(isGranted: screenRecordingAuthorizer.isAuthorized)
         settingsViewModel.updateDisplayOptions()
+
+        // Setup menu bar icon
+        menuBarManager.setup()
+        menuBarManager.settingsViewModel = settingsViewModel
+        menuBarManager.onToggleOverlay = { [weak self] in
+            self?.overlayController.toggleOverlay()
+        }
 
         windowIndexer.start()
         hotkeyManager.register(hotkey: settingsViewModel.hotkey) { [weak self] in

@@ -22,6 +22,8 @@
 	<string>public.app-category.productivity</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>13.0</string>
+	<key>LSUIElement</key>
+	<true/>
 	<key>NSAppleEventsUsageDescription</key>
 	<string>Wuzzy needs accessibility access to bring other application windows to the front.</string>
 </dict>
