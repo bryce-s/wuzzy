@@ -114,6 +114,30 @@ private extension WindowActivator {
         let cfTrue: CFBoolean = kCFBooleanTrue
         let cfFalse: CFBoolean = kCFBooleanFalse
 
+        // Check if window is on current workspace by checking if it appears in onscreen-only list
+        let isOnCurrentWorkspace = isWindowOnCurrentWorkspace(windowInfo.id)
+
+        if !isOnCurrentWorkspace {
+            NSLog("WindowActivator: window id \(windowInfo.id) is on different workspace; using Window menu")
+            // For cross-workspace windows, select from the Window menu
+            // This is the reliable way to trigger workspace switching
+            setAttribute(windowElement, attribute: kAXMinimizedAttribute as CFString, value: cfFalse)
+            app.activate(options: [.activateIgnoringOtherApps])
+
+            // Wait for app to activate
+            Thread.sleep(forTimeInterval: 0.2)
+
+            // Select the window from the Window menu
+            if selectWindowFromMenu(appElement: appElement, windowTitle: windowInfo.windowTitle) {
+                NSLog("WindowActivator: successfully selected window from Window menu")
+                return
+            }
+
+            NSLog("WindowActivator: Window menu selection failed, falling back to cycle")
+            runWindowCycleFallback(targetWindow: windowInfo, app: app)
+            return
+        }
+
         setAttribute(windowElement, attribute: kAXMinimizedAttribute as CFString, value: cfFalse)
         setAttribute(appElement, attribute: kAXFrontmostAttribute as CFString, value: cfTrue)
         setAttribute(appElement, attribute: kAXMainWindowAttribute as CFString, value: windowElement)
@@ -135,6 +159,58 @@ private extension WindowActivator {
         }
 
         app.activate(options: [.activateIgnoringOtherApps])
+    }
+
+    func selectWindowFromMenu(appElement: AXUIElement, windowTitle: String) -> Bool {
+        let normalizedTarget = normalizeMenuTitle(windowTitle)
+        guard !normalizedTarget.isEmpty else {
+            NSLog("WindowActivator: Window menu selection aborted; target title empty")
+            return false
+        }
+
+        guard let menuBar = resolveAttribute(for: appElement,
+                                             attribute: kAXMenuBarAttribute as CFString) else {
+            NSLog("WindowActivator: Window menu selection failed; menu bar unavailable")
+            return false
+        }
+
+        guard let windowMenuItem = findMenuBarItem(named: "Window", in: menuBar) else {
+            NSLog("WindowActivator: Window menu selection failed; could not locate Window menu item")
+            return false
+        }
+
+        let openResult = AXUIElementPerformAction(windowMenuItem, kAXPressAction as CFString)
+        if openResult != .success {
+            NSLog("WindowActivator: failed to open Window menu via AXPress (error \(openResult.rawValue)); continuing")
+        } else {
+            Thread.sleep(forTimeInterval: 0.05)
+        }
+
+        guard let menuContainer = resolveMenuContainer(for: windowMenuItem),
+              let menuItems = axElements(for: menuContainer,
+                                         attribute: kAXChildrenAttribute as CFString),
+              !menuItems.isEmpty else {
+            NSLog("WindowActivator: Window menu selection failed; submenu unavailable")
+            return false
+        }
+
+        for item in menuItems {
+            guard let candidateTitle = title(for: item) else {
+                continue
+            }
+
+            if menuTitle(candidateTitle, matches: normalizedTarget) {
+                let pressResult = AXUIElementPerformAction(item, kAXPressAction as CFString)
+                if pressResult == .success {
+                    Thread.sleep(forTimeInterval: 0.05)
+                    return true
+                }
+                NSLog("WindowActivator: Window menu item press for \"\(candidateTitle)\" failed with error \(pressResult.rawValue)")
+            }
+        }
+
+        NSLog("WindowActivator: unable to locate \"\(windowTitle)\" in Window menu")
+        return false
     }
 
     func performClickFallback(window: WindowInfo) -> Bool {
@@ -220,6 +296,56 @@ private extension WindowActivator {
 // MARK: - Helpers
 
 private extension WindowActivator {
+    func raiseWindowViaAppleScript(appName: String, windowTitle: String) -> Bool {
+        // Escape quotes in window title for AppleScript
+        let escapedTitle = windowTitle.replacingOccurrences(of: "\"", with: "\\\"")
+        let escapedAppName = appName.replacingOccurrences(of: "\"", with: "\\\"")
+
+        // Try using System Events to open Mission Control and click the window
+        let script = """
+        tell application "System Events"
+            tell application process "\(escapedAppName)"
+                set frontmost to true
+                try
+                    set theWindows to windows
+                    repeat with w in theWindows
+                        if name of w is "\(escapedTitle)" then
+                            perform action "AXRaise" of w
+                            return true
+                        end if
+                    end repeat
+                end try
+            end tell
+        end tell
+        return false
+        """
+
+        var error: NSDictionary?
+        if let scriptObject = NSAppleScript(source: script) {
+            let result = scriptObject.executeAndReturnError(&error)
+            if let error = error {
+                NSLog("WindowActivator: AppleScript error: \(error)")
+                return false
+            }
+            return result.booleanValue
+        }
+        return false
+    }
+
+    func isWindowOnCurrentWorkspace(_ windowID: CGWindowID) -> Bool {
+        let options: CGWindowListOption = [.excludeDesktopElements, .optionOnScreenOnly]
+        guard let array = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [[String: Any]] else {
+            return false
+        }
+
+        for window in array {
+            if let number = window[kCGWindowNumber as String] as? UInt32, CGWindowID(number) == windowID {
+                return true
+            }
+        }
+        return false
+    }
+
     func axElements(for element: AXUIElement, attribute: CFString) -> [AXUIElement]? {
         var value: CFTypeRef?
         let result = AXUIElementCopyAttributeValue(element, attribute, &value)
@@ -250,6 +376,36 @@ private extension WindowActivator {
         }
 
         return resultArray
+    }
+
+    func findMenuBarItem(named name: String, in menuBar: AXUIElement) -> AXUIElement? {
+        guard let menuItems = axElements(for: menuBar, attribute: kAXChildrenAttribute as CFString) else {
+            return nil
+        }
+
+        let targetName = normalizeMenuTitle(name)
+        for item in menuItems {
+            guard let itemTitle = title(for: item) else { continue }
+            if normalizeMenuTitle(itemTitle) == targetName {
+                return item
+            }
+        }
+
+        return nil
+    }
+
+    func resolveMenuContainer(for menuItem: AXUIElement) -> AXUIElement? {
+        if let children = axElements(for: menuItem, attribute: kAXChildrenAttribute as CFString),
+           let menu = children.first {
+            return menu
+        }
+
+        if let submenu = resolveAttribute(for: menuItem,
+                                          attribute: "AXMenuItemSubmenu" as CFString) {
+            return submenu
+        }
+
+        return nil
     }
 
     func resolveAttribute(for element: AXUIElement, attribute: CFString) -> AXUIElement? {
@@ -453,6 +609,71 @@ private extension WindowActivator {
             return number.intValue
         }
         return nil
+    }
+}
+
+// MARK: - Menu Title Helpers
+
+private extension WindowActivator {
+    func normalizeMenuTitle(_ title: String) -> String {
+        let replacedEllipsis = title.replacingOccurrences(of: "\u{2026}", with: "...")
+        let components = replacedEllipsis
+            .components(separatedBy: .whitespacesAndNewlines)
+            .filter { !$0.isEmpty }
+        return components.joined(separator: " ").lowercased()
+    }
+
+    func menuTitle(_ candidate: String, matches normalizedTarget: String) -> Bool {
+        let normalizedCandidate = normalizeMenuTitle(candidate)
+        if normalizedCandidate == normalizedTarget {
+            return true
+        }
+
+        let candidateWithoutPrefix = stripListPrefix(from: normalizedCandidate)
+        if candidateWithoutPrefix == normalizedTarget {
+            return true
+        }
+
+        if candidateWithoutPrefix.hasSuffix(normalizedTarget) {
+            return true
+        }
+
+        if normalizedTarget.count >= 4, candidateWithoutPrefix.contains(normalizedTarget) {
+            return true
+        }
+
+        return false
+    }
+
+    func stripListPrefix(from title: String) -> String {
+        guard !title.isEmpty else { return title }
+
+        var index = title.startIndex
+        var consumedDigit = false
+
+        while index < title.endIndex {
+            let character = title[index]
+
+            if character.isNumber {
+                consumedDigit = true
+                index = title.index(after: index)
+                continue
+            }
+
+            if consumedDigit && (character == "." || character == ")" || character == "-") {
+                index = title.index(after: index)
+                continue
+            }
+
+            if character == " " {
+                index = title.index(after: index)
+                continue
+            }
+
+            break
+        }
+
+        return String(title[index...]).trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
 

@@ -7,6 +7,7 @@ struct FuzzyMatchResult: Identifiable {
     let matchedIndices: [Int]
 
     var id: CGWindowID { window.id }
+
 }
 
 final class FuzzyMatcher {

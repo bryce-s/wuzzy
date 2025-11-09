@@ -23,6 +23,7 @@ final class SettingsViewModel: ObservableObject {
     @Published var windowDisplayPreference: OverlayDisplayPreference
     @Published private(set) var displayOptions: [DisplayOption] = []
     @Published var theme: OverlayTheme
+    @Published var showAllWorkspaces: Bool
 
     weak var delegate: SettingsViewModelDelegate?
 
@@ -41,6 +42,7 @@ final class SettingsViewModel: ObservableObject {
         let defaults = UserDefaults.standard
         self.windowDisplayPreference = OverlayDisplayPreferenceStorage.load(from: defaults) ?? .active
         self.theme = OverlayThemeStorage.load(from: defaults) ?? .macOS
+        self.showAllWorkspaces = defaults.bool(forKey: "com.brycesmith.wuzzy.showAllWorkspaces")
         updateDisplayOptions()
         bind()
     }
@@ -94,6 +96,14 @@ final class SettingsViewModel: ObservableObject {
             .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
             .sink { newValue in
                 OverlayThemeStorage.store(theme: newValue, defaults: UserDefaults.standard)
+            }
+            .store(in: &cancellables)
+
+        $showAllWorkspaces
+            .dropFirst()
+            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
+            .sink { newValue in
+                UserDefaults.standard.set(newValue, forKey: "com.brycesmith.wuzzy.showAllWorkspaces")
             }
             .store(in: &cancellables)
     }

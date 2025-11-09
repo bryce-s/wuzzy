@@ -9,6 +9,7 @@ final class WindowIndexer {
 
     var onChange: (([WindowInfo]) -> Void)?
     var refreshInterval: TimeInterval = 0.4
+    var showAllWorkspaces: Bool = false
 
     func start() {
         timer?.cancel()
@@ -39,7 +40,10 @@ final class WindowIndexer {
     }
 
     private func fetchWindows() -> [WindowInfo] {
-        let options: CGWindowListOption = [.excludeDesktopElements, .optionOnScreenOnly]
+        var options: CGWindowListOption = [.excludeDesktopElements]
+        if !showAllWorkspaces {
+            options.insert(.optionOnScreenOnly)
+        }
         guard let array = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [[String: Any]] else {
             return []
         }
@@ -52,22 +56,34 @@ final class WindowIndexer {
                 let ownerPID = dict[kCGWindowOwnerPID as String] as? pid_t,
                 let layer = dict[kCGWindowLayer as String] as? Int,
                 let bounds = dict[kCGWindowBounds as String] as? [String: Any],
-                let height = bounds["Height"] as? Double
+                let height = bounds["Height"] as? Double,
+                let width = bounds["Width"] as? Double
             else {
+                return nil
+            }
+
+            // Filter out invisible windows when showing all workspaces
+            let alpha = (dict[kCGWindowAlpha as String] as? Double) ?? 0
+            if showAllWorkspaces && alpha <= 0 {
                 return nil
             }
 
             let rawTitle = (dict[kCGWindowName as String] as? String) ?? ""
 
-            if !Self.shouldInclude(ownerName: ownerName, layer: layer, title: rawTitle, height: height) {
+            if !Self.shouldInclude(ownerName: ownerName, layer: layer, title: rawTitle, height: height, width: width) {
                 return nil
             }
 
             let resolvedTitle = rawTitle.isEmpty ? (titleResolver.resolvedTitle(for: CGWindowID(windowNumber),
                                                                                 ownerPID: ownerPID) ?? "") : rawTitle
-            let finalTitle = resolvedTitle.isEmpty ? "Untitled" : resolvedTitle
 
-            let isOnscreen = (dict[kCGWindowAlpha as String] as? Double ?? 0) > 0
+            // Skip windows with no title
+            if resolvedTitle.isEmpty {
+                return nil
+            }
+
+            let finalTitle = resolvedTitle
+            let isOnscreen = alpha > 0
 
             return WindowInfo(id: CGWindowID(windowNumber),
                               applicationName: ownerName,
@@ -79,7 +95,7 @@ final class WindowIndexer {
         }
     }
 
-    static func shouldInclude(ownerName: String, layer: Int, title: String, height: Double) -> Bool {
+    static func shouldInclude(ownerName: String, layer: Int, title: String, height: Double, width: Double) -> Bool {
         if excludedOwners.contains(ownerName) {
             return false
         }
@@ -93,6 +109,11 @@ final class WindowIndexer {
         }
 
         if title.isEmpty && height < 5 {
+            return false
+        }
+
+        // Filter out tiny windows that are likely not real user windows
+        if width < 50 || height < 20 {
             return false
         }
 

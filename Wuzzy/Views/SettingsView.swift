@@ -24,6 +24,8 @@ struct SettingsView: View {
                     }
                 }
                 .pickerStyle(.menu)
+
+                Toggle("Show windows from all workspaces", isOn: $viewModel.showAllWorkspaces)
             }
 
             Section(header: Text("Permissions")) {

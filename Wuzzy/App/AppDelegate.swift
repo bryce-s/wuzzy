@@ -1,4 +1,5 @@
 import Cocoa
+import Combine
 
 final class WuzzyAppDelegate: NSObject, NSApplicationDelegate {
     private let accessibilityAuthorizer = AccessibilityAuthorizer()
@@ -14,6 +15,7 @@ final class WuzzyAppDelegate: NSObject, NSApplicationDelegate {
                                                          screenRecordingAuthorizer: screenRecordingAuthorizer)
     private lazy var overlayController = OverlayWindowController(viewModel: overlayViewModel,
                                                                  settings: settingsViewModel)
+    private var cancellables = Set<AnyCancellable>()
 
     let settingsViewModel: SettingsViewModel
 
@@ -41,6 +43,14 @@ final class WuzzyAppDelegate: NSObject, NSApplicationDelegate {
         menuBarManager.onToggleOverlay = { [weak self] in
             self?.overlayController.toggleOverlay()
         }
+
+        // Bind showAllWorkspaces setting to WindowIndexer
+        windowIndexer.showAllWorkspaces = settingsViewModel.showAllWorkspaces
+        settingsViewModel.$showAllWorkspaces
+            .sink { [weak self] showAll in
+                self?.windowIndexer.showAllWorkspaces = showAll
+            }
+            .store(in: &cancellables)
 
         windowIndexer.start()
         hotkeyManager.register(hotkey: settingsViewModel.hotkey) { [weak self] in
