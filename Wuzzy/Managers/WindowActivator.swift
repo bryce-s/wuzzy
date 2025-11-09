@@ -18,7 +18,7 @@ final class WindowActivator {
         let appElement = AXUIElementCreateApplication(window.ownerPID)
         guard let windowElement = resolveWindowElement(for: window, in: appElement) else {
             NSLog("WindowActivator: unable to resolve AX window id \(window.id) (\(window.displayName))")
-            app.activate(options: [.activateAllWindows, .activateIgnoringOtherApps])
+            app.activate(options: [.activateIgnoringOtherApps])
             return
         }
 
@@ -134,7 +134,7 @@ private extension WindowActivator {
             }
         }
 
-        app.activate(options: [.activateIgnoringOtherApps, .activateAllWindows])
+        app.activate(options: [.activateIgnoringOtherApps])
     }
 
     func performClickFallback(window: WindowInfo) -> Bool {
