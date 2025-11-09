@@ -20,14 +20,19 @@ struct OverlayView: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(backgroundLayer)
-        .clipShape(cornerShape)
-        .overlay(borderOverlay)
+        .background(
+            backgroundLayer
+                .clipShape(cornerShape)
+        )
+        .overlay(
+            borderOverlay
+        )
+        .compositingGroup()
         .shadow(color: theme.borderShadow?.color ?? .clear,
                 radius: theme.borderShadow?.radius ?? 0,
                 x: theme.borderShadow?.x ?? 0,
                 y: theme.borderShadow?.y ?? 0)
-        .padding()
+        .padding(theme.borderShadow != nil ? max(40, (theme.borderShadow?.radius ?? 0) * 1.5) : 0)
         .onExitCommand {
             viewModel.requestDismiss()
         }

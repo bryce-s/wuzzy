@@ -29,7 +29,7 @@ struct OverlayThemeStyle {
         background: Color(NSColor.windowBackgroundColor).opacity(0.97),
         border: Color.black.opacity(0.08),
         borderWidth: 0,
-        borderShadow: Shadow(color: Color.black.opacity(0.20), radius: 22, x: 0, y: 14),
+        borderShadow: Shadow(color: Color.black.opacity(0.3), radius: 24, x: 0, y: 4),
         primaryText: Color(nsColor: NSColor.labelColor),
         secondaryText: Color(nsColor: NSColor.secondaryLabelColor),
         searchFieldBackground: Color.black.opacity(0.08),
